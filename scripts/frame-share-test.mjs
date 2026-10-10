@@ -1054,7 +1054,7 @@ console.log('⑤ 静态接线');
     ok(/<button v-if="currentGroup && !currentGroup\._isLive" class="fshare-entry" @click="shareFrame">/.test(HTML), '分享面板里有「分享当前画面」入口,直播不显示');
     ok(/class="dplayer-icon dplayer-frame-icon"/.test(HTML) && /camBtn\.addEventListener\('click', \(e\) => \{ e\.stopPropagation\(\); this\.shareFrame\(\); \}\)/.test(HTML), '桌面控制栏相机图标');
     ok(/@media \(pointer: coarse\), \(max-width: 768px\) \{\s*#dplayer \.dplayer-icons \.dplayer-frame-icon \{ display: none !important; \}/.test(HTML), '触屏/窄屏控制栏收起相机图标(入口在分享面板)');
-    ok(/class="player-box"[^>]*:class="\{ 'dg-no-frame': previewLocked \|\| currentGroup\._isLive \}"/.test(HTML), '直播 / 未登录预览给 player-box 打 dg-no-frame');
+    ok(/class="player-box"[^>]*:class="\{ 'dg-no-frame': previewLocked \|\| trial\.on \|\| currentGroup\._isLive(?:, [^"]*)? \}"/.test(HTML), '直播 / 未登录预览 / 分享试看给 player-box 打 dg-no-frame');
     ok(/\.player-box\.dg-no-frame #dplayer \.dplayer-frame-icon \{ display:none !important; \}/.test(HTML), 'dg-no-frame 把相机图标藏掉');
     ok(!/<script[^>]+qrcode-generator/.test(HTML), '二维码库不在首屏 <script> 里(按需加载)');
     ok(/-webkit-touch-callout:default !important/.test(HTML.slice(HTML.indexOf('.fshare-img'), HTML.indexOf('.fshare-img') + 400)), '卡片图片打开长按菜单(body 全局关了 touch-callout)');

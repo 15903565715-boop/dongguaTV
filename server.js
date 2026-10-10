@@ -105,6 +105,14 @@ ACCESS_PASSWORDS.forEach((pwd, index) => {
 
 console.log(`[System] Password mode: ${ACCESS_PASSWORDS.length > 1 ? 'Multi-user' : 'Single'} (${ACCESS_PASSWORDS.length} passwords)`);
 
+// 🎟️ 分享链接试看:没登录的人打开分享链接(?play=)先能看这么久(按每部剧在本机累计),到点再要求登录。0 = 关(直接锁定要登录)
+//   只是前端的软门槛:搜索 / 详情接口本来就不校验令牌,登录墙一直是前端拦的
+const SHARE_TRIAL_SEC = (() => {
+    const raw = process.env.SHARE_TRIAL_MINUTES;
+    const m = (raw === undefined || String(raw).trim() === '') ? 5 : Number(raw);
+    return Number.isFinite(m) && m > 0 ? Math.round(Math.min(m, 120) * 60) : 0;
+})();
+
 // 反查：token(=SHA256(独立密码)) → 原始独立密码。仅用于站长后台辨认"是哪个独立密码用户"。
 // 只在 ADMIN_TOKEN 鉴权后的后台接口里用到，不外泄。
 const HASH_TO_PASSWORD = Object.create(null);
@@ -3687,7 +3695,8 @@ app.get('/api/auth/check', (req, res) => {
     // 检查是否需要密码
     res.json({
         requirePassword: ACCESS_PASSWORDS.length > 0,
-        multiUserMode: ACCESS_PASSWORDS.length > 1
+        multiUserMode: ACCESS_PASSWORDS.length > 1,
+        shareTrial: SHARE_TRIAL_SEC
     });
 });
 
